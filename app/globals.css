@@ -9,12 +9,20 @@
 }
 
 body {
-  color: rgb(var(--foreground-rgb));
-  background: #0D0D0D;
-  overflow-x: hidden;
-  cursor: none; /* Hides default arrow */
-    background: #050505;
-    color: #F0F0F0;
+  background: #050505;
+  color: #F0F0F0;
+  /* Default cursor on mobile, None on desktop */
+  cursor: auto;
+}
+
+/* Only hide cursor on screens larger than mobile (768px) */
+@media (min-width: 768px) {
+  body {
+    cursor: none;
+  }
+  a, button {
+    cursor: none;
+  }
 }
 
 /* Hide scrollbar */
