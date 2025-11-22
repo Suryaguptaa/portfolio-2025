@@ -1,7 +1,8 @@
 "use client";
 import Navbar from '@/components/Navbar';
+import Image from 'next/image'; // <--- IMPORT THIS
 
-// --- YOUR DATA GOES HERE ---
+// --- YOUR DATA ---
 const projects = [
   {
     id: 1,
@@ -21,7 +22,6 @@ const projects = [
     tag: "Typography",
     media: "https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17",
   },
-  // Copy/Paste to add more...
 ];
 
 export default function DesignPage() {
@@ -39,10 +39,16 @@ export default function DesignPage() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-x-6 gap-y-16">
           {projects.map((proj, index) => (
             <div key={proj.id} className="group cursor-pointer">
+
+              {/* Image Container */}
               <div className="relative overflow-hidden aspect-[3/4] bg-neutral-900 mb-6 border border-white/5">
-                 <img
+                 {/* OPTIMIZED IMAGE COMPONENT */}
+                 <Image
                    src={proj.media}
-                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 grayscale group-hover:grayscale-0"
+                   alt={proj.title}
+                   fill
+                   className="object-cover transition-transform duration-700 group-hover:scale-105 grayscale group-hover:grayscale-0"
+                   sizes="(max-width: 768px) 100vw, 33vw" // Loads smaller image on mobile
                  />
               </div>
 

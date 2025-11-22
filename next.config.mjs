@@ -1,7 +1,17 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  /* config options here */
-  reactCompiler: true,
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'images.unsplash.com', // Allow Unsplash
+      },
+      {
+        protocol: 'https',
+        hostname: 'i.imgur.com', // Allow Imgur (if you use it)
+      },
+    ],
+  },
 };
 
-export default nextConfig;
+module.exports = nextConfig;

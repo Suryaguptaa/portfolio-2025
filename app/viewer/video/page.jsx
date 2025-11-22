@@ -1,13 +1,14 @@
 "use client";
 import Navbar from '@/components/Navbar';
+import Image from 'next/image'; // <--- IMPORT THIS
 
-// --- YOUR DATA GOES HERE ---
+// --- YOUR DATA ---
 const projects = [
   {
     id: 1,
     title: "Nike Air Max",
     tools: ["Premiere Pro", "After Effects"],
-    media: "https://images.unsplash.com/photo-1542291026-7eec264c27ff", // Replace with your image link
+    media: "https://images.unsplash.com/photo-1542291026-7eec264c27ff",
   },
   {
     id: 2,
@@ -21,7 +22,6 @@ const projects = [
     tools: ["Premiere Pro"],
     media: "https://images.unsplash.com/photo-1483985988355-763728e1935b",
   },
-  // Copy and paste the block above to add more projects...
 ];
 
 export default function VideoPage() {
@@ -39,11 +39,16 @@ export default function VideoPage() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-20">
           {projects.map((proj, index) => (
             <div key={proj.id} className={`group cursor-pointer ${index % 2 === 1 ? 'md:mt-32' : ''}`}>
+
               {/* Image Container */}
               <div className="relative overflow-hidden aspect-[16/9] bg-neutral-900 mb-6 border border-white/5">
-                 <img
+                 {/* OPTIMIZED IMAGE COMPONENT */}
+                 <Image
                    src={proj.media}
-                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 opacity-80 group-hover:opacity-100"
+                   alt={proj.title}
+                   fill
+                   className="object-cover transition-transform duration-700 group-hover:scale-105 opacity-80 group-hover:opacity-100"
+                   sizes="(max-width: 768px) 100vw, 50vw" // Loads smaller image on mobile
                  />
                  <div className="absolute inset-0 bg-accent/0 group-hover:bg-accent/10 transition-colors duration-300 mix-blend-overlay"></div>
               </div>
