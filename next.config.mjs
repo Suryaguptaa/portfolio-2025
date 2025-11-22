@@ -4,14 +4,14 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: 'images.unsplash.com', // Allow Unsplash
+        hostname: 'images.unsplash.com',
       },
       {
         protocol: 'https',
-        hostname: 'i.imgur.com', // Allow Imgur (if you use it)
+        hostname: 'i.imgur.com',
       },
     ],
   },
 };
 
-module.exports = nextConfig;
+export default nextConfig;
