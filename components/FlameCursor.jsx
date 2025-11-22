@@ -11,14 +11,13 @@ export default function FlameCursor() {
     const bigCircle = bigCircleRef.current;
     const smallDot = smallDotRef.current;
 
-    // Check if elements exist (safety check)
     if (!bigCircle || !smallDot) return;
 
-    // 1. Move Small Dot instantly
+    // 1. Move Small Dot (Instant)
     const xToDot = gsap.quickTo(smallDot, "x", { duration: 0.1, ease: "power3" });
     const yToDot = gsap.quickTo(smallDot, "y", { duration: 0.1, ease: "power3" });
 
-    // 2. Move Big Circle with delay (smooth lag)
+    // 2. Move Big Ring (Delayed/Smooth)
     const xToCircle = gsap.quickTo(bigCircle, "x", { duration: 0.5, ease: "power3" });
     const yToCircle = gsap.quickTo(bigCircle, "y", { duration: 0.5, ease: "power3" });
 
@@ -49,14 +48,16 @@ export default function FlameCursor() {
     };
   }, []);
 
-  // 4. Hover Animation (Ring gets bigger, Dot disappears)
+  // 4. Scale Animation on Hover
   useEffect(() => {
     if (!bigCircleRef.current || !smallDotRef.current) return;
 
     if (isHovering) {
-      gsap.to(bigCircleRef.current, { scale: 3, opacity: 0.5, borderWidth: '1px' });
-      gsap.to(smallDotRef.current, { opacity: 0 }); // Hide dot on hover
+      // Hover: Ring gets big and faint, Dot disappears
+      gsap.to(bigCircleRef.current, { scale: 3, opacity: 0.4, borderWidth: '1px' });
+      gsap.to(smallDotRef.current, { opacity: 0 });
     } else {
+      // Normal: Ring normal size, Dot visible
       gsap.to(bigCircleRef.current, { scale: 1, opacity: 1, borderWidth: '2px' });
       gsap.to(smallDotRef.current, { opacity: 1 });
     }
@@ -64,13 +65,13 @@ export default function FlameCursor() {
 
   return (
     <>
-      {/* The Trailing Ring - HIDDEN ON MOBILE (md:block) */}
+      {/* The Trailing Ring - HIDDEN ON MOBILE */}
       <div
         ref={bigCircleRef}
-        className="hidden md:block fixed top-0 left-0 w-8 h-8 border-2 border-white rounded-full pointer-events-none z-[9990] mix-blend-difference"
+        className="hidden md:block fixed top-0 left-0 w-10 h-10 border-2 border-white rounded-full pointer-events-none z-[9990] mix-blend-difference"
         style={{ transform: 'translate(-50%, -50%)' }}
       />
-      {/* The Center Dot - HIDDEN ON MOBILE (md:block) */}
+      {/* The Center Dot - HIDDEN ON MOBILE */}
       <div
         ref={smallDotRef}
         className="hidden md:block fixed top-0 left-0 w-2 h-2 bg-white rounded-full pointer-events-none z-[9991] mix-blend-difference"

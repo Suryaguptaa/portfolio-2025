@@ -9,13 +9,13 @@ export default function Navbar() {
   const activeStyle = "text-accent line-through decoration-1";
 
   return (
-    // CHANGED: Added flex-col for mobile, md:flex-row for desktop
-    // CHANGED: Added backdrop-blur for better readability on mobile
-    <nav className="fixed top-0 left-0 w-full p-6 md:p-8 z-50 flex flex-col md:flex-row justify-between items-center md:items-start mix-blend-difference text-white">
+    // CHANGED: Added 'bg-background/80 backdrop-blur-md border-b border-white/5'
+    // REMOVED: 'mix-blend-difference' (It causes the visual clash)
+    <nav className="fixed top-0 left-0 w-full p-6 md:p-8 z-50 flex flex-col md:flex-row justify-between items-center md:items-start bg-background/90 backdrop-blur-md border-b border-white/5 text-white transition-all duration-300">
 
       {/* Logo */}
       <Link href="/">
-        <div className="font-display text-3xl md:text-4xl font-bold uppercase leading-[0.8] text-center md:text-left mb-4 md:mb-0">
+        <div className="font-display text-3xl md:text-4xl font-bold uppercase leading-[0.8] text-center md:text-left mb-4 md:mb-0 hover:text-accent transition-colors cursor-pointer">
           SURYA<br/>GUPTA
         </div>
       </Link>
