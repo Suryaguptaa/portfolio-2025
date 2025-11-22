@@ -7,10 +7,14 @@ module.exports = {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        sans: ['var(--font-inter)', 'sans-serif'],
+        display: ['var(--font-oswald)', 'sans-serif'], // Usage: font-display
+      },
       colors: {
-        neon: "#00FFC5",
-        dark: "#0D0D0D",
-        cream: "#FAF7F2",
+        background: "#050505", // Deep Matte Black
+        paper: "#F0F0F0",      // The Cream/White color from your inspo
+        accent: "#FF3333",     // A sharp red (like image 4) for hover states
       },
     },
   },

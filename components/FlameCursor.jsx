@@ -1,32 +1,60 @@
 "use client";
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 
 export default function FlameCursor() {
   const cursorRef = useRef(null);
+  const [isHovering, setIsHovering] = useState(false);
 
   useEffect(() => {
-    // 1. QuickTo is a GSAP feature for high-performance mouse following
-    const xTo = gsap.quickTo(cursorRef.current, "x", { duration: 0.1, ease: "power3" });
-    const yTo = gsap.quickTo(cursorRef.current, "y", { duration: 0.1, ease: "power3" });
+    const cursor = cursorRef.current;
 
-    // 2. Listen for mouse movement
+    // 1. Setup GSAP for smooth movement
+    const xTo = gsap.quickTo(cursor, "x", { duration: 0.15, ease: "power3" });
+    const yTo = gsap.quickTo(cursor, "y", { duration: 0.15, ease: "power3" });
+
+    // 2. Move Cursor
     const moveCursor = (e) => {
       xTo(e.clientX);
       yTo(e.clientY);
     };
 
+    // 3. Detect Hover over clickable items
+    const handleMouseOver = (e) => {
+      if (e.target.tagName.toLowerCase() === 'a' ||
+          e.target.tagName.toLowerCase() === 'button' ||
+          e.target.closest('a') ||
+          e.target.closest('button')) {
+        setIsHovering(true);
+      } else {
+        setIsHovering(false);
+      }
+    };
+
     window.addEventListener("mousemove", moveCursor);
-    return () => window.removeEventListener("mousemove", moveCursor);
+    window.addEventListener("mouseover", handleMouseOver);
+
+    return () => {
+      window.removeEventListener("mousemove", moveCursor);
+      window.removeEventListener("mouseover", handleMouseOver);
+    };
   }, []);
+
+  // 4. Animate Scale based on Hover State
+  useEffect(() => {
+    if (isHovering) {
+      gsap.to(cursorRef.current, { scale: 4, duration: 0.3 }); // Grow big
+    } else {
+      gsap.to(cursorRef.current, { scale: 1, duration: 0.3 }); // Shrink back
+    }
+  }, [isHovering]);
 
   return (
     <div
       ref={cursorRef}
-      className="fixed top-0 left-0 w-6 h-6 bg-neon rounded-full pointer-events-none z-[9999] mix-blend-difference blur-[2px]"
+      className="fixed top-0 left-0 w-4 h-4 bg-white rounded-full pointer-events-none z-[9999] mix-blend-difference"
       style={{
-        transform: 'translate(-50%, -50%)', // Center the div on the mouse
-        boxShadow: '0 0 20px 5px #00FFC5'    // The "Flame" glow effect
+        transform: 'translate(-50%, -50%)',
       }}
     />
   );
