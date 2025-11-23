@@ -26,8 +26,10 @@ function ProjectCard({ proj, type }) {
   const videoRef = useRef(null);
   const [isMuted, setIsMuted] = useState(true);
 
+  // Desktop Hover Logic
   const handleMouseEnter = () => {
-    if(videoRef.current) {
+    // Only needed for Desktop behavior
+    if(window.innerWidth > 768 && videoRef.current) {
       videoRef.current.play();
       videoRef.current.style.opacity = 1;
       videoRef.current.style.filter = "grayscale(0%)";
@@ -35,7 +37,7 @@ function ProjectCard({ proj, type }) {
   };
 
   const handleMouseLeave = () => {
-    if(videoRef.current) {
+    if(window.innerWidth > 768 && videoRef.current) {
       videoRef.current.pause();
       videoRef.current.style.opacity = 0.7;
       videoRef.current.style.filter = "grayscale(100%)";
@@ -53,13 +55,16 @@ function ProjectCard({ proj, type }) {
     }
   };
 
+  // RESPONSIVE SIZING:
+  // Mobile: Uses 'vw' (Screen Width) to look big and clear.
+  // Desktop: Uses 'vh' (Screen Height) to keep proportion.
   const cardClass = type === "vertical"
-    ? "aspect-[9/16] w-[35vh]"
-    : "aspect-video w-[70vh]";
+    ? "aspect-[9/16] w-[65vw] md:w-[35vh]"
+    : "aspect-video w-[85vw] md:w-[70vh]";
 
   return (
     <div
-      className={`group cursor-pointer flex-shrink-0 relative ${cardClass} bg-neutral-900 border border-white/10 overflow-hidden`}
+      className={`group cursor-pointer flex-shrink-0 relative snap-center ${cardClass} bg-neutral-900 border border-white/10 overflow-hidden rounded-lg md:rounded-none`}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
@@ -69,15 +74,28 @@ function ProjectCard({ proj, type }) {
             loop
             muted={isMuted}
             playsInline
+            autoPlay // Force Autoplay on Mobile
             preload="metadata"
-            className="w-full h-full object-cover opacity-70 grayscale transition-all duration-500"
+            // MOBILE: opacity-100 grayscale-0 (Always visible & color)
+            // DESKTOP: md:opacity-70 md:grayscale (Hidden/B&W until hover)
+            className="w-full h-full object-cover transition-all duration-500
+                       opacity-100 grayscale-0
+                       md:opacity-70 md:grayscale md:group-hover:opacity-100 md:group-hover:grayscale-0"
          />
-         <button onClick={toggleSound} className="absolute bottom-4 right-4 z-30 p-2 rounded-full bg-black/50 backdrop-blur-md border border-white/20 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300 hover:bg-accent hover:text-black">
+
+         <button
+            onClick={toggleSound}
+            className="absolute bottom-4 right-4 z-30 p-2 rounded-full
+                       bg-black/50 backdrop-blur-md border border-white/20 text-white
+                       opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-300"
+         >
             {isMuted ? <FaVolumeMute size={12} /> : <FaVolumeUp size={12} />}
          </button>
-         <div className="absolute inset-0 flex flex-col justify-end p-6 bg-gradient-to-t from-black/90 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
-            <h3 className="font-display text-2xl uppercase text-white drop-shadow-md leading-none">{proj.title}</h3>
-            <p className="font-sans text-xs text-gray-300 uppercase tracking-widest mt-2">{proj.tools.join(" / ")}</p>
+
+         <div className="absolute inset-0 flex flex-col justify-end p-4 md:p-6 bg-gradient-to-t from-black/90 to-transparent
+                         opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
+            <h3 className="font-display text-xl md:text-2xl uppercase text-white drop-shadow-md leading-none">{proj.title}</h3>
+            <p className="font-sans text-[10px] md:text-xs text-gray-300 uppercase tracking-widest mt-2">{proj.tools.join(" / ")}</p>
          </div>
     </div>
   );
@@ -85,15 +103,16 @@ function ProjectCard({ proj, type }) {
 
 /* --- MAIN PAGE --- */
 export default function VideoPage() {
-  const [activeMode, setActiveMode] = useState(null); // Starts as NULL (Cover Page)
+  const [activeMode, setActiveMode] = useState('cinematic');
 
   const scrollRef = useRef(0);
   const x = useSpring(0, { stiffness: 50, damping: 20 });
 
-  // Horizontal Scroll Logic
+  // Desktop Scroll Logic
   useEffect(() => {
     const handleWheel = (e) => {
-      if (!activeMode) return;
+      // Disable this logic on mobile to allow natural swipe
+      if (window.innerWidth < 768) return;
 
       if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
          scrollRef.current -= e.deltaY;
@@ -120,110 +139,88 @@ export default function VideoPage() {
   };
 
   return (
-    <main className="bg-background h-screen w-screen overflow-hidden text-paper selection:bg-accent selection:text-black flex flex-col relative">
+    <main className="bg-background h-screen w-screen overflow-hidden text-paper selection:bg-accent selection:text-black flex flex-col">
       <Navbar />
 
-      <AnimatePresence mode="wait">
+      {/* HEADER AREA */}
+      <section className="pt-24 md:pt-32 px-6 md:px-8 bg-background z-20 flex flex-col items-start border-b border-white/5 pb-6">
 
-        {/* STATE 1: COVER SCREEN (Centered) */}
-        {!activeMode && (
-          <motion.section
-            key="cover"
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 1.05, filter: "blur(10px)" }} // Clean fade out
-            transition={{ duration: 0.5 }}
-            className="absolute inset-0 z-30 flex flex-col justify-center items-center text-center bg-background"
+        <h1 className="font-display text-xs md:text-sm text-gray-500 uppercase tracking-[0.3em] mb-4 md:mb-6">
+          Motion Library
+        </h1>
+
+        {/* TAB SWITCHER - Responsive Text Sizes */}
+        <div className="flex items-baseline gap-6 md:gap-12">
+          <button
+            onClick={() => switchMode('cinematic')}
+            className={`font-display uppercase transition-all duration-300 leading-none
+              ${activeMode === 'cinematic'
+                ? "text-4xl md:text-7xl text-accent" // Mobile: 4xl, Desktop: 7xl
+                : "text-4xl md:text-7xl text-white/30 hover:text-white"
+              }
+            `}
           >
-            <h1 className="font-display text-[10vw] md:text-[8vw] uppercase leading-none tracking-tighter text-white mb-6">
-              Motion Library
-            </h1>
-            <p className="text-sm md:text-xl text-gray-500 uppercase tracking-widest mb-16 max-w-lg">
-              A curated archive of commercial work & visual experiments.
-            </p>
+            Cinematic
+          </button>
 
-            <div className="flex gap-10 md:gap-20">
-              <button
-                onClick={() => switchMode('cinematic')}
-                className="font-display text-4xl md:text-6xl uppercase text-white hover:text-accent transition-colors duration-300"
-              >
-                Cinematic
-              </button>
-              <button
-                onClick={() => switchMode('social')}
-                className="font-display text-4xl md:text-6xl uppercase text-white hover:text-accent transition-colors duration-300"
-              >
-                Socials
-              </button>
-            </div>
+          <button
+            onClick={() => switchMode('social')}
+            className={`font-display uppercase transition-all duration-300 leading-none
+              ${activeMode === 'social'
+                ? "text-4xl md:text-7xl text-accent"
+                : "text-4xl md:text-7xl text-white/30 hover:text-white"
+              }
+            `}
+          >
+            Socials
+          </button>
+        </div>
+      </section>
 
-            <p className="absolute bottom-10 text-accent text-xs uppercase tracking-[0.3em] animate-pulse">
-              ↓ Select a Category to Enter ↓
-            </p>
-          </motion.section>
-        )}
+      {/* CONTENT AREA */}
+      <div className="flex-grow relative flex items-center overflow-hidden bg-black/20">
 
-        {/* STATE 2: GALLERY SCREEN (Top Aligned) */}
-        {activeMode && (
-          <motion.section
-            key="gallery"
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={activeMode}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.8 }}
-            className="absolute inset-0 z-20 flex flex-col"
+            transition={{ duration: 0.4 }}
+            className="absolute left-0 w-full h-full flex items-center"
           >
-            {/* GALLERY HEADER */}
-            <div className="pt-32 px-8 pb-8 border-b border-white/5 bg-background flex flex-col items-start">
-              <h1 className="font-display text-sm text-gray-500 uppercase tracking-[0.5em] mb-6">
-                Motion Library
-              </h1>
 
-              <div className="flex items-baseline gap-8 md:gap-12">
-                <button
-                  onClick={() => switchMode('cinematic')}
-                  className={`font-display text-5xl md:text-7xl uppercase leading-none transition-colors duration-300 ${activeMode === 'cinematic' ? "text-accent" : "text-white/30 hover:text-white"}`}
-                >
-                  Cinematic
-                </button>
-                <button
-                  onClick={() => switchMode('social')}
-                  className={`font-display text-5xl md:text-7xl uppercase leading-none transition-colors duration-300 ${activeMode === 'social' ? "text-accent" : "text-white/30 hover:text-white"}`}
-                >
-                  Socials
-                </button>
-              </div>
-            </div>
-
-            {/* GALLERY CONTENT */}
-            <div className="flex-grow relative flex items-center overflow-hidden bg-black/20">
+            {/* MOBILE: Native horizontal scrolling (overflow-x-auto) with Snapping
+                DESKTOP: Framer Motion 'x' translation
+            */}
+            <div
+              className="flex gap-6 md:gap-8 items-center h-full w-full px-6 md:pl-[5vw]
+                         overflow-x-auto md:overflow-visible snap-x snap-mandatory no-scrollbar"
+            >
+              {/* Desktop Animation Wrapper (Only applies effect on desktop) */}
               <motion.div
-                key={activeMode + "-list"} // Re-trigger fade when switching lists
-                initial={{ opacity: 0, x: 50 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.5 }}
-                className="absolute left-0 pl-[5vw] h-full flex items-center"
-                style={{ x }}
+                className="flex gap-6 md:gap-8 items-center"
+                style={{ x: typeof window !== 'undefined' && window.innerWidth > 768 ? x : 0 }}
               >
-                <div className="flex gap-8 items-center h-full">
-                  {activeMode === 'cinematic'
-                    ? horizontalProjects.map((proj) => <ProjectCard key={proj.id} proj={proj} type="horizontal" />)
-                    : verticalProjects.map((proj) => <ProjectCard key={proj.id} proj={proj} type="vertical" />)
-                  }
-                  <div className="w-[20vw] flex-shrink-0"></div>
-                </div>
+                {activeMode === 'cinematic'
+                  ? horizontalProjects.map((proj) => <ProjectCard key={proj.id} proj={proj} type="horizontal" />)
+                  : verticalProjects.map((proj) => <ProjectCard key={proj.id} proj={proj} type="vertical" />)
+                }
+                {/* Spacer */}
+                <div className="w-[10vw] md:w-[20vw] flex-shrink-0"></div>
               </motion.div>
             </div>
 
-            {/* FOOTER HINT */}
-            <div className="absolute bottom-8 right-8 text-xs uppercase tracking-widest text-gray-600">
-              Scroll to Pan ↔
-            </div>
+          </motion.div>
+        </AnimatePresence>
 
-          </motion.section>
-        )}
+      </div>
 
-      </AnimatePresence>
+      {/* FOOTER HINT */}
+      <div className="hidden md:block absolute bottom-8 right-8 text-xs uppercase tracking-widest text-gray-600">
+        Scroll to Pan ↔
+      </div>
+
     </main>
   );
 }
