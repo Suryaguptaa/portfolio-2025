@@ -82,3 +82,44 @@ html {
 ::-webkit-scrollbar-thumb:hover {
   background: #FF3333; /* Accent Color */
 }
+
+/* --- REAL LIQUID TEXTURE EFFECT --- */
+.text-liquid {
+  /* 1. Use the image as the ink */
+  background-image: url('/liquid.jpg');
+
+  /* 2. Make it huge so we can scroll it without repeating too fast */
+  background-size: 200% auto;
+
+  /* 3. Clip it to the text */
+  color: transparent;
+  -webkit-background-clip: text;
+  background-clip: text;
+
+  /* 4. Increase contrast to make it look like Shiny Chrome */
+  filter: contrast(1.5) brightness(1.2);
+
+  /* 5. Animate the texture position */
+  animation: liquidFlow 15s linear infinite;
+}
+
+@keyframes liquidFlow {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%; /* Moves Right */
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* Hide Scrollbar but keep functionality */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}

@@ -4,20 +4,17 @@ import { useEffect, useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Navbar from '@/components/Navbar';
-import Image from 'next/image'; // Import Image
-import HyperText from '@/components/HyperText'; // <--- IMPORT THIS
-import MagneticButton from '@/components/MagneticButton'; // <--- IMPORT THIS
-import Typewriter from '@/components/Typewriter'; // <--- IMPORT THIS
+import Typewriter from '@/components/Typewriter'; // Import Typewriter
+import MagneticButton from '@/components/MagneticButton'; // Import Magnetic Button
 
 gsap.registerPlugin(ScrollTrigger);
 
-// ... keep your services array exactly the same ...
 const services = [
   { title: "Typography Reels", desc: "Kinetic typography and lyric videos that sync perfectly with the beat." },
-  { title: "Motion Graphics Reels", desc: "Complex 2D/3D animation showreels." },
-  { title: "SaaS Style Videos", desc: "Clean, modern product explainers." },
+  { title: "Motion Graphics Reels", desc: "Complex 2D/3D animation showreels. Bringing static assets to life." },
+  { title: "SaaS Style Videos", desc: "Clean, modern product explainers. Showcasing software and apps." },
   { title: "Trailer Editing", desc: "Cinematic pacing, sound design, and dramatic cuts." },
-  { title: "Box / Docu-Style", desc: "Information-heavy edits with paper textures." },
+  { title: "Box / Docu-Style", desc: "Information-heavy edits with paper textures, collages, and map animations." },
   { title: "UI Animation", desc: "Micro-interactions and interface walkthroughs." },
   { title: "Advertisements", desc: "High-conversion social media ads." },
   { title: "Logo Animation", desc: "Brand reveals and sonic branding." }
@@ -27,7 +24,7 @@ export default function Home() {
   const marqueeRef = useRef(null);
 
   useEffect(() => {
-    // 1. Marquee
+    // 1. Marquee Animation
     gsap.to(marqueeRef.current, {
       xPercent: -50,
       repeat: -1,
@@ -35,14 +32,20 @@ export default function Home() {
       ease: "linear",
     });
 
-    // 2. Fade Up
+    // 2. Fade Up Elements
     const elements = document.querySelectorAll(".fade-up");
     elements.forEach((el) => {
       gsap.fromTo(el,
         { y: 50, opacity: 0 },
         {
-          y: 0, opacity: 1, duration: 1, ease: "power3.out",
-          scrollTrigger: { trigger: el, start: "top 85%" }
+          y: 0,
+          opacity: 1,
+          duration: 1,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: el,
+            start: "top 85%",
+          }
         }
       );
     });
@@ -64,11 +67,22 @@ export default function Home() {
         </div>
 
         <div className="relative z-10 mt-10 md:mt-0">
+          {/* UPDATED HEADER WITH LIQUID EFFECT */}
           <h1 className="font-display text-[19vw] md:text-[18vw] leading-[0.8] font-bold uppercase tracking-tighter text-paper mix-blend-overlay fade-up text-center md:text-left cursor-default">
-            <HyperText text="CREATIVE" className="block" /> {/* <--- HACKER EFFECT */}
-            <span className="md:pl-[10vw] text-outline text-white mix-blend-normal block">
-              <HyperText text="DEVELOPER" className="text-outline" /> {/* <--- HACKER EFFECT */}
+
+            {/* 1. CREATIVE (Solid Liquid) */}
+            <span className="block text-liquid">
+              CREATIVE
             </span>
+
+            {/* 2. DEVELOPER (Outline Liquid) */}
+            <span className="md:pl-[10vw] block">
+               {/* We remove 'text-outline' here to let the liquid fill it,
+                   OR keep 'text-outline' if you want it hollow.
+                   Let's make it Liquid too for maximum effect. */}
+               <span className="text-liquid">DEVELOPER</span>
+            </span>
+
           </h1>
           <div className="flex justify-between mt-10 text-xs md:text-sm uppercase tracking-widest text-gray-300 fade-up font-bold px-2">
             <p>Based in India</p>
@@ -86,16 +100,13 @@ export default function Home() {
       </section>
 
       {/* SECTION 3: ABOUT */}
-            <section className="py-32 px-4 md:px-20 max-w-6xl mx-auto relative z-10">
-              <h2 className="text-accent text-xs md:text-sm uppercase tracking-[0.3em] mb-8 fade-up">01. About Me</h2>
-
-              {/* REPLACED STATIC TEXT WITH ANIMATED TYPEWRITER */}
-              <Typewriter
-                text="I am a multi-disciplinary creative bridging the gap between visual storytelling and technical execution. I don't just edit videos; I craft narratives that capture attention."
-                className="font-display text-2xl md:text-6xl uppercase leading-tight md:indent-20 text-justify md:text-left"
-              />
-
-            </section>
+      <section className="py-20 px-4 md:px-20 max-w-6xl mx-auto relative z-10">
+        <h2 className="text-accent text-xs md:text-sm uppercase tracking-[0.3em] mb-8 fade-up">01. About Me</h2>
+        <Typewriter
+          text="I am a multi-disciplinary creative bridging the gap between visual storytelling and technical execution. I don't just edit videos; I craft narratives that capture attention."
+          className="font-display text-2xl md:text-6xl uppercase leading-tight md:indent-20 text-justify md:text-left"
+        />
+      </section>
 
       {/* SECTION 4: SERVICES */}
       <section className="py-20 px-4 md:px-20 border-t border-white/10 relative z-10">
@@ -115,15 +126,11 @@ export default function Home() {
         </div>
       </section>
 
-      {/* SECTION 5: FOOTER WITH MAGNETIC BUTTON */}
+      {/* SECTION 5: FOOTER */}
       <section className="h-[50vh] md:h-[70vh] flex flex-col justify-center items-center text-center px-4 bg-white text-black mt-20 relative z-10">
         <p className="text-xs md:text-sm uppercase tracking-[0.3em] mb-4 md:mb-8">Have a project in mind?</p>
 
-        {/* MAGNETIC BUTTON IMPLEMENTATION */}
-        <MagneticButton
-          href="mailto:surya@example.com"
-          className="inline-block"
-        >
+        <MagneticButton href="mailto:surya@example.com" className="inline-block">
           <span className="font-display text-[12vw] md:text-[10vw] leading-none uppercase font-bold hover:text-accent transition-colors block">
             Let's Talk
           </span>
