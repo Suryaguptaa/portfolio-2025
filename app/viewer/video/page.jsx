@@ -4,7 +4,7 @@ import { useRef, useState, useEffect } from 'react';
 import { FaVolumeMute, FaVolumeUp } from 'react-icons/fa';
 import { motion, useSpring, AnimatePresence } from 'framer-motion';
 
-// --- DATA ---
+// --- DATA: HORIZONTAL (16:9) ---
 const horizontalProjects = [
   { id: 1, title: "Nike Commercial", tools: ["Premiere"], video: "/showreel.mp4" },
   { id: 2, title: "Cyberpunk City", tools: ["Blender"], video: "/showreel.mp4" },
@@ -13,32 +13,35 @@ const horizontalProjects = [
   { id: 5, title: "Travel Vlog", tools: ["Premiere"], video: "/showreel.mp4" },
 ];
 
+// --- DATA: VERTICAL (9:16) - UPDATED ---
 const verticalProjects = [
-  { id: 6, title: "Fashion Reel", tools: ["After Effects"], video: "/showreel.mp4" },
-  { id: 7, title: "TikTok Trend", tools: ["CapCut"], video: "/showreel.mp4" },
-  { id: 8, title: "Wide Source", tools: ["Premiere"], video: "/showreel.mp4" },
-  { id: 9, title: "Gym Edit", tools: ["CapCut"], video: "/showreel.mp4" },
-  { id: 10, title: "Lifestyle", tools: ["Premiere"], video: "/showreel.mp4" },
+  { id: 6, title: "Tylor The Creator", tools: ["Premiere"], video: "/TylorthecreatorComp.mp4" },
+  { id: 7, title: "Peso Pluma", tools: ["Blender"], video: "/PesoplumaComp.mp4" },
+  { id: 8, title: "Casey", tools: ["DaVinci"], video: "/CaseyComp.mp4" },
+  { id: 9, title: "Tylor The Creator", tools: ["Premiere"], video: "/TylorthecreatorComp.mp4" },
+    { id: 10, title: "Peso Pluma", tools: ["Blender"], video: "/PesoplumaComp.mp4" },
+    { id: 11, title: "Casey", tools: ["DaVinci"], video: "/CaseyComp.mp4" },
 ];
 
 /* --- COMPONENT: VIDEO CARD --- */
 function ProjectCard({ proj, type, mobileActiveId, setMobileActiveId }) {
   const videoRef = useRef(null);
-  const [isMuted, setIsMuted] = useState(false); // Default to Sound ON for this logic
+  // Default desktop state: Sound OFF until hover logic triggers
+  const [isMuted, setIsMuted] = useState(true);
 
   // --- DESKTOP HOVER LOGIC ---
   const handleMouseEnter = () => {
-    // Only on Desktop
     if(window.innerWidth > 768 && videoRef.current) {
-      videoRef.current.currentTime = 0; // Restart from beginning
-      videoRef.current.muted = false;   // Turn on Sound
-      videoRef.current.volume = 1.0;
+      videoRef.current.currentTime = 0;
+      videoRef.current.muted = false; // Unmute on hover
+      setIsMuted(false);
 
       const playPromise = videoRef.current.play();
       if (playPromise !== undefined) {
         playPromise.catch(() => {
-          // If browser blocks unmuted play, fallback to muted
+          // Auto-play policy fallback
           videoRef.current.muted = true;
+          setIsMuted(true);
           videoRef.current.play();
         });
       }
@@ -49,19 +52,18 @@ function ProjectCard({ proj, type, mobileActiveId, setMobileActiveId }) {
     if(window.innerWidth > 768 && videoRef.current) {
       videoRef.current.pause();
       videoRef.current.currentTime = 0;
+      videoRef.current.muted = true;
+      setIsMuted(true);
     }
   };
 
   // --- MOBILE TAP LOGIC ---
   const handleMobileClick = () => {
-    // Only on Mobile
     if(window.innerWidth < 768) {
       if (mobileActiveId === proj.id) {
-        // If clicking the one already playing -> Stop it
-        setMobileActiveId(null);
+        setMobileActiveId(null); // Stop if tapping active one
       } else {
-        // If clicking a new one -> Play this one (Parent will stop others)
-        setMobileActiveId(proj.id);
+        setMobileActiveId(proj.id); // Play this, stop others
       }
     }
   };
@@ -70,11 +72,10 @@ function ProjectCard({ proj, type, mobileActiveId, setMobileActiveId }) {
   useEffect(() => {
     if(window.innerWidth < 768 && videoRef.current) {
       if (mobileActiveId === proj.id) {
-        // I am the chosen one! Play with Sound.
         videoRef.current.muted = false;
+        setIsMuted(false);
         videoRef.current.play();
       } else {
-        // I am not chosen. Stop.
         videoRef.current.pause();
         videoRef.current.currentTime = 0;
       }
@@ -82,12 +83,12 @@ function ProjectCard({ proj, type, mobileActiveId, setMobileActiveId }) {
   }, [mobileActiveId, proj.id]);
 
 
-  // Sizing
+  // SIZING
   const cardClass = type === "vertical"
     ? "aspect-[9/16] w-[65vw] md:w-[35vh]"
     : "aspect-video w-full md:w-[70vh] mb-8 md:mb-0";
 
-  // Styling based on playing state
+  // STYLING (Active vs Inactive)
   const isPlayingMobile = mobileActiveId === proj.id;
   const mobileVisualClass = isPlayingMobile ? "opacity-100 grayscale-0" : "opacity-70 grayscale";
 
@@ -102,7 +103,7 @@ function ProjectCard({ proj, type, mobileActiveId, setMobileActiveId }) {
             ref={videoRef}
             src={proj.video}
             loop
-            muted={false} // We manage mute manually in handlers
+            muted={true} // Default muted to allow autoplay, controlled via JS
             playsInline
             preload="metadata"
             className={`w-full h-full object-cover transition-all duration-500
@@ -110,14 +111,15 @@ function ProjectCard({ proj, type, mobileActiveId, setMobileActiveId }) {
                        md:opacity-70 md:grayscale md:group-hover:opacity-100 md:group-hover:grayscale-0`}
          />
 
-         {/* Status Icon (Optional: Shows sound icon when playing) */}
+         {/* Status Icon */}
          <div className={`absolute bottom-4 right-4 z-30 p-2 rounded-full bg-black/50 backdrop-blur-md text-white transition-opacity duration-300
              ${isPlayingMobile ? 'opacity-100' : 'opacity-0'}
              md:opacity-0 md:group-hover:opacity-100`}
          >
-            <FaVolumeUp size={12} />
+            {isMuted ? <FaVolumeMute size={12} /> : <FaVolumeUp size={12} />}
          </div>
 
+         {/* Text Overlay */}
          <div className={`absolute inset-0 flex flex-col justify-end p-4 md:p-6 bg-gradient-to-t from-black/90 to-transparent transition-opacity duration-300 pointer-events-none
                          ${isPlayingMobile ? 'opacity-100' : 'opacity-100 md:opacity-0'}
                          md:group-hover:opacity-100`}>
@@ -130,10 +132,8 @@ function ProjectCard({ proj, type, mobileActiveId, setMobileActiveId }) {
 
 /* --- MAIN PAGE --- */
 export default function VideoPage() {
-  const [activeMode, setActiveMode] = useState('social');
-
-  // NEW: Track which video is playing on mobile
-  const [mobileActiveId, setMobileActiveId] = useState(null);
+  const [activeMode, setActiveMode] = useState('social'); // Default: Socials
+  const [mobileActiveId, setMobileActiveId] = useState(null); // Single active video on mobile
 
   const scrollRef = useRef(0);
   const x = useSpring(0, { stiffness: 50, damping: 20 });
@@ -162,8 +162,7 @@ export default function VideoPage() {
   const switchMode = (mode) => {
     if (activeMode === mode) return;
     setActiveMode(mode);
-    // Stop any playing videos when switching tabs
-    setMobileActiveId(null);
+    setMobileActiveId(null); // Stop videos when switching
     scrollRef.current = 0;
     x.set(0);
   };
@@ -213,8 +212,8 @@ export default function VideoPage() {
               className={`
                 px-6 py-8
                 ${activeMode === 'cinematic'
-                   ? "flex flex-col pb-32"
-                   : "flex gap-6 items-center h-full w-full overflow-x-auto snap-x snap-mandatory no-scrollbar"
+                   ? "flex flex-col pb-32" // Mobile Cinematic: Vertical Stack
+                   : "flex gap-6 items-center h-full w-full overflow-x-auto snap-x snap-mandatory no-scrollbar" // Mobile Socials: Horizontal Swipe
                  }
                 md:absolute md:left-0 md:pl-[5vw] md:flex-row md:gap-8 md:items-center md:h-full md:overflow-visible md:py-0
               `}
