@@ -30,11 +30,13 @@ export default function Navbar() {
       }`}
     >
 
-      <Link href="/">
-        <div className={`font-display text-3xl md:text-4xl font-bold uppercase leading-[0.8] text-center md:text-left mb-4 md:mb-0 hover:text-accent transition-colors cursor-pointer text-white`}>
-          SURYA<br/>GUPTA
-        </div>
-      </Link>
+      {/* Logo */}
+            <Link href="/">
+              {/* CHANGED: 'leading-[0.8]' -> 'leading-none' */}
+              <div className={`font-display text-3xl md:text-4xl font-bold uppercase leading-none text-center md:text-left mb-4 md:mb-0 hover:text-accent transition-colors cursor-pointer text-white`}>
+                SYNIX<br/>HERE
+              </div>
+            </Link>
 
       <div className={`flex flex-row md:flex-col gap-6 md:gap-2 font-display text-xs md:text-xl items-center md:items-end text-white`}>
         <Link href="/viewer/video" className={`${linkStyle} ${pathname.includes('video') ? activeStyle : ''}`}>
@@ -43,7 +45,7 @@ export default function Navbar() {
         <Link href="/viewer/design" className={`${linkStyle} ${pathname.includes('design') ? activeStyle : ''}`}>
           Design
         </Link>
-        <Link href="mailto:surya@example.com" className={linkStyle}>
+        <Link href="mailto:work.synix@gmail.com" className={linkStyle}>
           Contact
         </Link>
       </div>

@@ -55,41 +55,37 @@ export default function Home() {
     <main className="min-h-screen bg-background text-paper overflow-x-hidden">
       <Navbar />
 
-      {/* SECTION 1: HERO */}
-      <section className="h-screen flex flex-col justify-center px-4 md:px-8 pt-20 relative overflow-hidden">
-        <div className="absolute inset-0 w-full h-full z-0">
-          <video
-            className="w-full h-full object-cover"
-            src="/showreel.mp4"
-            autoPlay loop muted playsInline preload="none" poster="/poster.jpg"
-          />
-          <div className="absolute inset-0 bg-black/60"></div>
-        </div>
+ {/* SECTION 1: HERO */}
+       <section className="h-screen flex flex-col justify-center px-4 md:px-8 pt-32 relative overflow-hidden"> {/* Increased pt-20 to pt-32 */}
 
-        <div className="relative z-10 mt-10 md:mt-0">
-          {/* UPDATED HEADER WITH LIQUID EFFECT */}
-          <h1 className="font-display text-[19vw] md:text-[18vw] leading-[0.8] font-bold uppercase tracking-tighter text-paper mix-blend-overlay fade-up text-center md:text-left cursor-default">
+         <div className="absolute inset-0 w-full h-full z-0">
+           <video
+             className="w-full h-full object-cover"
+             src="/showreel.mp4"
+             autoPlay
+             loop
+             muted
+             playsInline
+             preload="none"
+             poster="/poster.jpg"
+           />
+           <div className="absolute inset-0 bg-black/60"></div>
+         </div>
 
-            {/* 1. CREATIVE (Solid Liquid) */}
-            <span className="block text-liquid">
-              CREATIVE
-            </span>
+         <div className="relative z-10 mt-10 md:mt-0">
+           {/* CHANGED: leading-[0.8] -> leading-[0.9] */}
+           {/* ADDED: py-4 to prevent clipping */}
+           <h1 className="font-display text-[19vw] md:text-[18vw] leading-[0.9] font-bold uppercase tracking-tighter text-paper mix-blend-overlay fade-up text-center md:text-left py-4">
+             Creative<br />
+             <span className="md:pl-[10vw] text-outline text-white mix-blend-normal">Developer</span>
+           </h1>
 
-            {/* 2. DEVELOPER (Outline Liquid) */}
-            <span className="md:pl-[10vw] block">
-               {/* We remove 'text-outline' here to let the liquid fill it,
-                   OR keep 'text-outline' if you want it hollow.
-                   Let's make it Liquid too for maximum effect. */}
-               <span className="text-liquid">DEVELOPER</span>
-            </span>
-
-          </h1>
-          <div className="flex justify-between mt-10 text-xs md:text-sm uppercase tracking-widest text-gray-300 fade-up font-bold px-2">
-            <p>Based in India</p>
-            <p>Scroll for more ↓</p>
-          </div>
-        </div>
-      </section>
+           <div className="flex justify-between mt-4 text-xs md:text-sm uppercase tracking-widest text-gray-300 fade-up font-bold px-2">
+             <p>Based in India</p>
+             <p>Scroll for more ↓</p>
+           </div>
+         </div>
+       </section>
 
       {/* SECTION 2: MARQUEE */}
       <section className="py-6 md:py-10 border-y border-white/10 overflow-hidden bg-white text-black relative z-10">
@@ -130,7 +126,7 @@ export default function Home() {
       <section className="h-[50vh] md:h-[70vh] flex flex-col justify-center items-center text-center px-4 bg-white text-black mt-20 relative z-10">
         <p className="text-xs md:text-sm uppercase tracking-[0.3em] mb-4 md:mb-8">Have a project in mind?</p>
 
-        <MagneticButton href="mailto:surya@example.com" className="inline-block">
+        <MagneticButton href="mailto:work.synix@gmail.com" className="inline-block">
           <span className="font-display text-[12vw] md:text-[10vw] leading-none uppercase font-bold hover:text-accent transition-colors block">
             Let's Talk
           </span>

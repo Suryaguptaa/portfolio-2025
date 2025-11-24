@@ -9,7 +9,7 @@ const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 const oswald = Oswald({ subsets: ['latin'], variable: '--font-oswald' });
 
 export const metadata = {
-  title: 'Surya Portfolio',
+  title: 'Synixhere',
   description: 'Creative Portfolio',
 };
 

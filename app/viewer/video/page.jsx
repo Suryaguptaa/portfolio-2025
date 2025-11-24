@@ -14,9 +14,9 @@ const horizontalProjects = [
 ];
 
 const verticalProjects = [
-  { id: 6, title: "Fashion Reel", tools: ["After Effects"], video: "/showreel.mp4" },
-  { id: 7, title: "TikTok Trend", tools: ["CapCut"], video: "/showreel.mp4" },
-  { id: 8, title: "Wide Source", tools: ["Premiere"], video: "/showreel.mp4" },
+  { id: 6, title: "Tylor The Creator", tools: ["After Effects"], video: "/TylorthecreatorComp.mp4" },
+  { id: 7, title: "Peso Pluma", tools: ["After Effects"], video: "/PesoplumaComp.mp4" },
+  { id: 8, title: "Casey", tools: ["After Effects"], video: "/CaseyComp.mp4" },
   { id: 9, title: "Gym Edit", tools: ["CapCut"], video: "/showreel.mp4" },
   { id: 10, title: "Lifestyle", tools: ["Premiere"], video: "/showreel.mp4" },
 ];
@@ -80,7 +80,7 @@ function ProjectCard({ proj, type }) {
 
   return (
     <div
-      className={`group cursor-pointer flex-shrink-0 relative snap-center ${cardClass} bg-neutral-900 border border-white/10 overflow-hidden rounded-lg md:rounded-none`}
+      className={`group cursor-pointer flex-shrink-0 relative snap-center ${cardClass} bg-neutral-900 border border-white/10 overflow-hidden rounded-lg md:rounded-2x1`}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       onClick={handleMobileClick}
